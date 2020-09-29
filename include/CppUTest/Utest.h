@@ -87,6 +87,13 @@ public:
     virtual ~CrashingTestTerminator() _destructor_override;
 };
 
+class CrashingTestTerminatorWithoutExceptions : public TestTerminatorWithoutExceptions
+{
+public:
+    virtual void exitCurrentTest() const _override;
+    virtual ~CrashingTestTerminatorWithoutExceptions() _destructor_override;
+};
+
 //////////////////// UtestShell
 
 class UtestShell
@@ -95,6 +102,7 @@ public:
     static UtestShell *getCurrent();
 
     static const TestTerminator &getCurrentTestTerminator();
+    static const TestTerminator &getCurrentTestTerminatorWithoutExceptions();
 
     static void setCrashOnFail();
     static void restoreDefaultTestTerminator();
@@ -174,6 +182,8 @@ protected:
 
     static const NormalTestTerminator normalTestTerminator_;
     static const CrashingTestTerminator crashingTestTerminator_;
+    static const TestTerminatorWithoutExceptions normalTestTerminatorWithoutExceptions_;
+    static const CrashingTestTerminatorWithoutExceptions crashingTestTerminatorWithoutExceptions_;
 
 private:
     const char *group_;
@@ -192,6 +202,7 @@ private:
     static TestResult* testResult_;
 
     static const TestTerminator *currentTestTerminator_;
+    static const TestTerminator *currentTestTerminatorWithoutExceptions_;
 };
 
 

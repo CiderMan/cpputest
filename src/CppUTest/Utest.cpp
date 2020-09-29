@@ -577,22 +577,32 @@ UtestShell* UtestShell::getCurrent()
 
 const NormalTestTerminator UtestShell::normalTestTerminator_;
 const CrashingTestTerminator UtestShell::crashingTestTerminator_;
+const TestTerminatorWithoutExceptions UtestShell::normalTestTerminatorWithoutExceptions_;
+const CrashingTestTerminatorWithoutExceptions UtestShell::crashingTestTerminatorWithoutExceptions_;
 
 const TestTerminator *UtestShell::currentTestTerminator_ = &UtestShell::normalTestTerminator_;
+const TestTerminator *UtestShell::currentTestTerminatorWithoutExceptions_ = &UtestShell::normalTestTerminatorWithoutExceptions_;
 
 const TestTerminator &UtestShell::getCurrentTestTerminator()
 {
     return *currentTestTerminator_;
 }
 
+const TestTerminator &UtestShell::getCurrentTestTerminatorWithoutExceptions()
+{
+    return *currentTestTerminatorWithoutExceptions_;
+}
+
 void UtestShell::setCrashOnFail()
 {
     currentTestTerminator_ = &crashingTestTerminator_;
+    currentTestTerminatorWithoutExceptions_ = &crashingTestTerminatorWithoutExceptions_;
 }
 
 void UtestShell::restoreDefaultTestTerminator()
 {
     currentTestTerminator_ = &normalTestTerminator_;
+    currentTestTerminatorWithoutExceptions_ = &normalTestTerminatorWithoutExceptions_;
 }
 
 ExecFunctionTestShell::~ExecFunctionTestShell()
@@ -702,6 +712,16 @@ void CrashingTestTerminator::exitCurrentTest() const
 }
 
 CrashingTestTerminator::~CrashingTestTerminator()
+{
+}
+
+void CrashingTestTerminatorWithoutExceptions::exitCurrentTest() const
+{
+    UtestShell::crash();
+    TestTerminatorWithoutExceptions::exitCurrentTest();
+}
+
+CrashingTestTerminatorWithoutExceptions::~CrashingTestTerminatorWithoutExceptions()
 {
 }
 
